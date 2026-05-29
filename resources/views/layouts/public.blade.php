@@ -13,6 +13,17 @@
     <style>
         * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
 
+        html { scroll-behavior: smooth; }
+
+        .app-container {
+            animation: pageFadeIn 0.6s ease-out;
+        }
+
+        @keyframes pageFadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
         :root {
             --tn-ink: #0b1a33;
             --tn-muted: #64748b;
@@ -110,6 +121,12 @@
             color: white;
             font-size: 1.1rem;
             box-shadow: 0 4px 10px rgba(15, 118, 110, 0.25);
+            animation: brandPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes brandPulse {
+            0%, 100% { box-shadow: 0 4px 10px rgba(15, 118, 110, 0.25); }
+            50%      { box-shadow: 0 4px 20px rgba(37, 99, 235, 0.35); }
         }
 
         /* Language switcher pills */
@@ -216,8 +233,23 @@
         .section-pad { padding: 5rem 0; }
 
         .btn-icon { display: inline-flex; align-items: center; gap: .4rem; font-weight: 600; }
-        .btn { border-radius: 8px; font-weight: 600; padding: 0.5rem 1.1rem; transition: all 0.2s ease; }
+        .btn { border-radius: 8px; font-weight: 600; padding: 0.5rem 1.1rem; transition: all 0.2s ease; position: relative; overflow: hidden; }
         .btn-sm { border-radius: 6px; padding: 0.35rem 0.75rem; }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.15);
+            transform: translateX(-100%) skewX(-15deg);
+            transition: transform 0.5s ease;
+            pointer-events: none;
+        }
+
+        .btn-primary:hover::after,
+        .btn-outline-primary:hover::after {
+            transform: translateX(100%) skewX(-15deg);
+        }
         .btn-primary { background: linear-gradient(135deg, #2563eb, #1d4ed8); border: none; box-shadow: 0 2px 8px rgba(37,99,235,0.25); }
         .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(37,99,235,0.35); }
         .btn-outline-primary { border: 1.5px solid #2563eb; color: #2563eb; }
@@ -241,7 +273,29 @@
         .alert-success { background: var(--tn-alert-bg); color: var(--tn-alert-color); }
         .alert-danger { background: var(--tn-alert-danger-bg); color: var(--tn-alert-danger-color); }
 
-        .nav-link { font-weight: 500; color: var(--tn-muted); border-radius: 8px; transition: all 0.2s ease; }
+        .nav-link {
+            font-weight: 500; color: var(--tn-muted); border-radius: 8px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 4px; left: 50%;
+            width: 0; height: 2px;
+            background: var(--tn-blue);
+            border-radius: 2px;
+            transition: all 0.25s ease;
+            transform: translateX(-50%);
+            opacity: 0;
+        }
+
+        .nav-link:hover::after {
+            width: calc(100% - 2rem);
+            opacity: 1;
+        }
+
         .nav-link:hover { color: var(--tn-blue); background: rgba(37,99,235,0.06); }
 
         html.dark .nav-link:hover { color: var(--tn-blue); background: rgba(96,165,250,0.1); }
@@ -405,6 +459,68 @@
             box-shadow: 0 6px 20px rgba(37,99,235,0.4);
         }
 
+        /* ── Trip card stagger entrance ───────────────────────── */
+        .trip-card-wrapper {
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        .trip-card-container .trip-card-wrapper {
+            opacity: 0;
+            transform: translateY(24px);
+        }
+
+        .trip-card-entered .trip-card-wrapper {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .trip-card-entered .trip-card-wrapper:nth-child(1) { transition-delay: 0.03s; }
+        .trip-card-entered .trip-card-wrapper:nth-child(2) { transition-delay: 0.08s; }
+        .trip-card-entered .trip-card-wrapper:nth-child(3) { transition-delay: 0.13s; }
+        .trip-card-entered .trip-card-wrapper:nth-child(4) { transition-delay: 0.18s; }
+        .trip-card-entered .trip-card-wrapper:nth-child(5) { transition-delay: 0.23s; }
+        .trip-card-entered .trip-card-wrapper:nth-child(6) { transition-delay: 0.28s; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .trip-card-wrapper { opacity: 1 !important; transform: none !important; }
+            footer { opacity: 1 !important; transform: none !important; }
+            .app-container { animation: none !important; }
+        }
+
+        /* ── Hero animated gradient border on search panel ─────── */
+        .search-panel {
+            position: relative;
+        }
+
+        .search-panel::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #2563eb, #0f766e, #2563eb, #0f766e);
+            background-size: 300% 300%;
+            z-index: -1;
+            animation: borderGlow 4s ease-in-out infinite;
+            opacity: 0.4;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { background-position: 0% 50%; }
+            50%      { background-position: 100% 50%; }
+        }
+
+        /* ── Footer fade-in on scroll ─────────────────────────── */
+        footer {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        footer.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         @media (max-width: 767.98px) {
             .hero { min-height: 500px; }
             .lang-pills { margin-top: 0.5rem; }
@@ -440,7 +556,7 @@
                     <form method="post" action="{{ route('logout') }}" class="d-inline">
                         @csrf
                         <button class="btn btn-outline-secondary btn-sm btn-icon">
-                            <i class="bi bi-box-arrow-right"></i><span>{{ __('messages.logout') }}</span>
+                            <i class="bi bi-box-arrow-right"></i><span>{{ __('messages        .logout') }}</span>
                         </button>
                     </form>
                 @else
@@ -496,7 +612,9 @@
     </div>
 @endif
 
-@yield('content')
+<div class="app-container">
+    @yield('content')
+</div>
 
 <footer class="py-4" style="background: var(--tn-footer-bg); backdrop-filter: blur(12px); border-top: 1px solid var(--tn-line);">
     <div class="container d-flex flex-wrap justify-content-between gap-2 small text-secondary">
@@ -563,6 +681,56 @@
     document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-stagger').forEach(function(el) {
         observer.observe(el);
     });
+})();
+
+/* ── Navbar shrink on scroll ────────────────────────────────── */
+(function() {
+    const nav = document.querySelector('.site-nav');
+    if (!nav) return;
+
+    function handleScroll() {
+        if (window.scrollY > 60) {
+            nav.style.paddingTop = '0.25rem';
+            nav.style.paddingBottom = '0.25rem';
+            nav.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
+        } else {
+            nav.style.paddingTop = '';
+            nav.style.paddingBottom = '';
+            nav.style.boxShadow = '';
+        }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+})();
+
+/* ── Trip card stagger entrance ─────────────────────────────── */
+(function() {
+    const container = document.querySelector('.trip-card-container');
+    if (!container) return;
+    const cardObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('trip-card-entered');
+                cardObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    cardObserver.observe(container);
+})();
+
+/* ── Footer fade-in ─────────────────────────────────────────── */
+(function() {
+    const footer = document.querySelector('footer');
+    if (!footer) return;
+    const footerObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                footerObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.05 });
+    footerObserver.observe(footer);
 })();
 </script>
 </body>

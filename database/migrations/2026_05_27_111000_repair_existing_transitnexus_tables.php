@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -28,11 +27,15 @@ return new class extends Migration
         }
 
         if (Schema::hasColumn('users', 'user_id') && ! Schema::hasColumn('users', 'id')) {
-            DB::statement('ALTER TABLE users CHANGE user_id id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT');
+            Schema::table('users', function (Blueprint $table) {
+                $table->renameColumn('user_id', 'id');
+            });
         }
 
         if (Schema::hasColumn('users', 'username') && ! Schema::hasColumn('users', 'name')) {
-            DB::statement('ALTER TABLE users CHANGE username name VARCHAR(255) NOT NULL');
+            Schema::table('users', function (Blueprint $table) {
+                $table->renameColumn('username', 'name');
+            });
         }
 
         Schema::table('users', function (Blueprint $table) {
@@ -115,7 +118,9 @@ return new class extends Migration
         }
 
         if (Schema::hasColumn('trips', 'date') && ! Schema::hasColumn('trips', 'departure_date')) {
-            DB::statement('ALTER TABLE trips CHANGE date departure_date DATE NOT NULL');
+            Schema::table('trips', function (Blueprint $table) {
+                $table->renameColumn('date', 'departure_date');
+            });
         }
 
         Schema::table('trips', function (Blueprint $table) {

@@ -12,6 +12,17 @@
     <style>
         * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
 
+        html { scroll-behavior: smooth; }
+
+        .app-shell {
+            animation: adminFadeIn 0.5s ease-out both;
+        }
+
+        @keyframes adminFadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
         :root {
             --tn-ink: #0b1a33;
             --tn-muted: #64748b;
@@ -163,6 +174,29 @@
             box-shadow: inset 3px 0 0 var(--tn-blue);
         }
 
+        .sidebar .nav-link {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .sidebar .nav-link.active::before {
+            content: '';
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--tn-blue);
+            opacity: 0;
+            animation: pulseDot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 0.3; }
+            50%      { opacity: 1; }
+        }
+
         /* Language switcher in sidebar */
         .lang-switcher {
             margin-top: auto;
@@ -209,7 +243,12 @@
 
         .topbar h1 { font-weight: 700; font-size: 1.2rem; letter-spacing: -0.01em; }
 
-        .page { padding: 1.75rem 2rem; }
+        .page { padding: 1.75rem 2rem; animation: pageContentIn 0.4s ease-out 0.15s both; }
+
+        @keyframes pageContentIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
 
         /* ── Cards / Panels ────────────────────────────────────── */
         .panel, .metric-card {
@@ -233,6 +272,17 @@
             border-radius: 14px;
             position: relative;
             overflow: hidden;
+            animation: metricFadeIn 0.5s ease-out both;
+        }
+
+        .metric-card:nth-child(1) { animation-delay: 0.05s; }
+        .metric-card:nth-child(2) { animation-delay: 0.12s; }
+        .metric-card:nth-child(3) { animation-delay: 0.19s; }
+        .metric-card:nth-child(4) { animation-delay: 0.26s; }
+
+        @keyframes metricFadeIn {
+            from { opacity: 0; transform: translateY(16px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .metric-card::after {
@@ -275,7 +325,25 @@
         }
 
         .table td { padding: 0.85rem 1rem; vertical-align: middle; }
-        .table tbody tr { transition: background 0.15s ease; }
+        .table tbody tr {
+            transition: background 0.15s ease;
+            animation: rowFadeIn 0.4s ease-out both;
+        }
+
+        .table tbody tr:nth-child(1) { animation-delay: 0.02s; }
+        .table tbody tr:nth-child(2) { animation-delay: 0.06s; }
+        .table tbody tr:nth-child(3) { animation-delay: 0.10s; }
+        .table tbody tr:nth-child(4) { animation-delay: 0.14s; }
+        .table tbody tr:nth-child(5) { animation-delay: 0.18s; }
+        .table tbody tr:nth-child(6) { animation-delay: 0.22s; }
+        .table tbody tr:nth-child(7) { animation-delay: 0.26s; }
+        .table tbody tr:nth-child(8) { animation-delay: 0.30s; }
+
+        @keyframes rowFadeIn {
+            from { opacity: 0; transform: translateX(-8px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
         .table tbody tr:hover { background: var(--tn-table-hover); }
 
         /* ── Buttons ───────────────────────────────────────────── */

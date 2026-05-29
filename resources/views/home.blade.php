@@ -49,9 +49,9 @@
                     </a>
                 @endguest
             </div>
-            <div class="row g-4 reveal-stagger">
+            <div class="row g-4 trip-card-container">
                 @forelse ($trips as $trip)
-                    <div class="col-md-6 col-xl-4">
+                    <div class="col-md-6 col-xl-4 trip-card-wrapper">
                         <article class="trip-card p-3 d-flex flex-column position-relative">
                             <div class="card-glow"></div>
                             <div class="d-flex justify-content-between gap-3 mb-3">
