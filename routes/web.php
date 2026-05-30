@@ -25,6 +25,8 @@ Route::get('/lang/{locale}', function (string $locale) {
 // Guest routes (login, register, password reset)
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::get('/login/admin', [AuthController::class, 'showAdminLogin'])->name('login.admin');
+    Route::get('/login/customer', [AuthController::class, 'showCustomerLogin'])->name('login.customer');
     Route::post('/login', [AuthController::class, 'login'])->name('login.store');
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register'])->name('register.store');

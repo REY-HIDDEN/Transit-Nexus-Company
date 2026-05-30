@@ -521,9 +521,568 @@
             transform: translateY(0);
         }
 
+        /* ── Portal cards (login selection) ────────────────────── */
+        .portal-card {
+            display: block;
+            text-decoration: none;
+            background: var(--tn-panel);
+            border: 2px solid var(--tn-line);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .portal-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .portal-card-customer::before {
+            background: radial-gradient(ellipse at 50% 0%, rgba(37, 99, 235, 0.06), transparent 70%);
+        }
+
+        .portal-card-admin::before {
+            background: radial-gradient(ellipse at 50% 0%, rgba(15, 118, 110, 0.06), transparent 70%);
+        }
+
+        .portal-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 24px 80px rgba(0,0,0,0.1);
+        }
+
+        .portal-card:hover::before {
+            opacity: 1;
+        }
+
+        .portal-card-customer:hover {
+            border-color: #2563eb;
+            box-shadow: 0 24px 80px rgba(37, 99, 235, 0.15);
+        }
+
+        .portal-card-admin:hover {
+            border-color: #0f766e;
+            box-shadow: 0 24px 80px rgba(15, 118, 110, 0.15);
+        }
+
+        .portal-card:active {
+            transform: translateY(-3px) scale(0.99);
+        }
+
+        .portal-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.25rem;
+            font-size: 2rem;
+            color: white;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+        }
+
+        .portal-card:hover .portal-icon {
+            transform: scale(1.06) rotate(-2deg);
+        }
+
+        .portal-icon-customer {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.25);
+        }
+
+        .portal-icon-admin {
+            background: linear-gradient(135deg, #0f766e, #0d5e57);
+            box-shadow: 0 8px 24px rgba(15, 118, 110, 0.25);
+        }
+
+        .portal-card:hover .portal-icon-customer {
+            box-shadow: 0 12px 36px rgba(37, 99, 235, 0.35);
+        }
+
+        .portal-card:hover .portal-icon-admin {
+            box-shadow: 0 12px 36px rgba(15, 118, 110, 0.35);
+        }
+
+        .portal-btn-admin {
+            background: linear-gradient(135deg, #0f766e, #0d5e57);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.6rem 1.3rem;
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.3);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .portal-btn-admin:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 28px rgba(15, 118, 110, 0.4);
+            color: white;
+        }
+
+        .portal-btn-admin:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        .portal-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.3rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: white;
+        }
+
+        .portal-badge-admin {
+            background: linear-gradient(135deg, #0f766e, #0d5e57);
+        }
+
+        .portal-badge-customer {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        }
+
+        /* ── Auth page (portal selection & login form) ─────────── */
+        .auth-section {
+            min-height: calc(100vh - 160px);
+            display: flex;
+            align-items: center;
+            padding: 4rem 0;
+        }
+
+        .auth-brand-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--tn-gradient);
+            color: white;
+            font-size: 1.4rem;
+            box-shadow: 0 6px 16px rgba(15, 118, 110, 0.25);
+            animation: brandPulse 3s ease-in-out infinite;
+        }
+
+        .auth-brand-icon-sm {
+            width: 44px;
+            height: 44px;
+            font-size: 1.15rem;
+        }
+
+        .auth-heading {
+            font-size: clamp(1.5rem, 3vw, 1.8rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            color: var(--tn-ink);
+        }
+
+        .auth-subtext {
+            color: var(--tn-muted);
+            font-size: 0.95rem;
+            max-width: 360px;
+            margin: 0 auto;
+        }
+
+        .auth-panel {
+            background: var(--tn-panel);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--tn-line);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
+        .auth-panel-narrow {
+            max-width: 440px;
+        }
+
+        .auth-panel-wide {
+            max-width: 500px;
+        }
+
+        html.dark .auth-panel {
+            box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+        }
+
+        .auth-panel:hover {
+            box-shadow: 0 12px 48px rgba(0,0,0,0.12);
+        }
+
+        html.dark .auth-panel:hover {
+            box-shadow: 0 12px 48px rgba(0,0,0,0.4);
+        }
+
+        /* ── Auth Links ─────────────────────────────────────────── */
+        .auth-link {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-decoration: none;
+            color: var(--tn-blue);
+            transition: color 0.2s ease;
+        }
+
+        .auth-link::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 0;
+            height: 1.5px;
+            background: currentColor;
+            border-radius: 2px;
+            transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .auth-link:hover {
+            color: #1d4ed8;
+        }
+
+        html.dark .auth-link:hover {
+            color: #93c5fd;
+        }
+
+        .auth-link:hover::after {
+            width: 100%;
+        }
+
+        /* Secondary / muted link */
+        .auth-link-muted {
+            color: var(--tn-muted);
+            font-weight: 500;
+        }
+
+        .auth-link-muted::after {
+            height: 1px;
+            background: currentColor;
+        }
+
+        .auth-link-muted:hover {
+            color: var(--tn-ink);
+        }
+
+        /* Portal switch link (go back) */
+        .auth-link-switch {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.4rem 1rem;
+            border: 1.5px solid var(--tn-line);
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--tn-muted);
+            transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .auth-link-switch:hover {
+            color: var(--tn-blue);
+            border-color: var(--tn-blue);
+            background: rgba(37, 99, 235, 0.04);
+            transform: translateY(-1px);
+        }
+
+        .auth-link-switch:active {
+            transform: translateY(0) scale(0.97);
+        }
+
+        .auth-link-switch i {
+            font-size: 0.75rem;
+            transition: transform 0.25s ease;
+        }
+
+        .auth-link-switch:hover i {
+            transform: translateX(-3px);
+        }
+
+        /* Home back link (pill) */
+        .auth-link-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--tn-muted);
+            padding: 0.4rem 1.1rem;
+            border-radius: 100px;
+            border: 1.5px solid var(--tn-line);
+            transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .auth-link-home:hover {
+            color: var(--tn-ink);
+            border-color: var(--tn-ink);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+
+        .auth-link-home i {
+            transition: transform 0.25s ease;
+            font-size: 0.8rem;
+        }
+
+        .auth-link-home:hover i {
+            transform: translateX(-3px);
+        }
+
+        /* Register / Create account link at bottom of form */
+        .auth-link-register {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-weight: 700;
+            font-size: 0.88rem;
+            text-decoration: none;
+            color: var(--tn-blue);
+            padding: 0.25rem 0;
+            position: relative;
+            transition: color 0.2s ease;
+        }
+
+        .auth-link-register::after {
+            content: '';
+            position: absolute;
+            bottom: 1px;
+            left: 0;
+            width: 100%;
+            height: 1.5px;
+            background: currentColor;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border-radius: 2px;
+        }
+
+        .auth-link-register:hover {
+            color: #1d4ed8;
+        }
+
+        html.dark .auth-link-register:hover {
+            color: #93c5fd;
+        }
+
+        .auth-link-register:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        /* ── Portal selection heading ────────────────────────── */
+        .portal-select-heading {
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.08;
+            color: var(--tn-ink);
+        }
+
+        .portal-select-sub {
+            font-size: clamp(1rem, 1.5vw, 1.15rem);
+            color: var(--tn-muted);
+        }
+
+        /* ── Register link inside portal card ──────────────────── */
+        .portal-card-row {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .portal-card-title {
+            color: var(--tn-ink);
+        }
+
+        .portal-card-desc {
+            font-size: 0.95rem;
+        }
+
+        .portal-card-link {
+            font-weight: 600;
+            font-size: 0.82rem;
+            color: var(--tn-blue);
+            text-decoration: none;
+            position: relative;
+            transition: color 0.2s ease;
+        }
+
+        .portal-card-link::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 0;
+            height: 1.5px;
+            background: currentColor;
+            border-radius: 2px;
+            transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .portal-card-link:hover {
+            color: var(--tn-blue);
+        }
+
+        html.dark .portal-card-link:hover {
+            color: #93c5fd;
+        }
+
+        .portal-card-link:hover::after {
+            width: 100%;
+        }
+
+        /* ── Forgot password link ──────────────────────────────── */
+        .auth-link-forgot {
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-decoration: none;
+            color: var(--tn-muted);
+            position: relative;
+            transition: color 0.2s ease;
+        }
+
+        .auth-link-forgot::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--tn-blue);
+            border-radius: 2px;
+            transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .auth-link-forgot:hover {
+            color: var(--tn-blue);
+        }
+
+        .auth-link-forgot:hover::after {
+            width: 100%;
+        }
+
+        /* ── Login form enhancements ────────────────────────────── */
+        .auth-form .form-control {
+            border-radius: 10px;
+            border: 1.5px solid var(--tn-line);
+            padding: 0.65rem 0.9rem;
+            font-size: 0.9rem;
+            background: var(--tn-input-bg);
+            color: var(--tn-ink);
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .auth-form .form-control:focus {
+            border-color: var(--tn-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .auth-form .form-label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--tn-ink);
+            margin-bottom: 0.4rem;
+        }
+
+        .auth-form .form-check-input:checked {
+            background-color: var(--tn-blue);
+            border-color: var(--tn-blue);
+        }
+
+        .auth-form .form-check-label {
+            font-size: 0.85rem;
+            color: var(--tn-muted);
+        }
+
+        .auth-form .btn-login {
+            border-radius: 10px;
+            padding: 0.7rem 1.1rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            border: none;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-form .btn-login::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.15);
+            transform: translateX(-100%) skewX(-15deg);
+            transition: transform 0.5s ease;
+            pointer-events: none;
+        }
+
+        .auth-form .btn-login:hover::after {
+            transform: translateX(100%) skewX(-15deg);
+        }
+
+        .auth-form .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
+        }
+
+        .auth-form .btn-login:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        /* ── Portal form specific ────────────────────────────── */
+        .auth-form-admin .btn-login {
+            background: linear-gradient(135deg, #0f766e, #0d5e57);
+            box-shadow: 0 4px 14px rgba(15, 118, 110, 0.25);
+        }
+
+        .auth-form-admin .btn-login:hover {
+            box-shadow: 0 8px 24px rgba(15, 118, 110, 0.35);
+        }
+
+        /* ── Auth divider ───────────────────────────────────────── */
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--tn-muted);
+            font-size: 0.78rem;
+            font-weight: 500;
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--tn-line);
+        }
+
         @media (max-width: 767.98px) {
             .hero { min-height: 500px; }
             .lang-pills { margin-top: 0.5rem; }
+            .auth-section { padding: 2.5rem 0; }
+            .portal-card { padding: 2rem 1.5rem; }
         }
     </style>
 </head>

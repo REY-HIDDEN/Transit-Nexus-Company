@@ -13,7 +13,17 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
-        return view('auth.login');
+        return view('auth.login', ['portal' => null]);
+    }
+
+    public function showAdminLogin()
+    {
+        return view('auth.login', ['portal' => 'admin']);
+    }
+
+    public function showCustomerLogin()
+    {
+        return view('auth.login', ['portal' => 'customer']);
     }
 
     public function login(Request $request)
@@ -31,6 +41,23 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
+        $portal = $request->input('portal');
+
+        // If the user specified a portal in the form, respect it
+        if ($portal === 'admin') {
+            if ($request->user()->role === 'admin') {
+                return redirect()->intended(route('dashboard'));
+            }
+            throw ValidationException::withMessages([
+                'email' => 'This account does not have admin privileges.',
+            ]);
+        }
+
+        if ($portal === 'customer') {
+            return redirect()->intended(route('account'));
+        }
+
+        // Fallback: detect by role
         return redirect()->intended(
             $request->user()->role === 'admin' ? route('dashboard') : route('account'),
         );
