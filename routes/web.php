@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\BusController;
 use App\Http\Controllers\CustomerBookingController;
@@ -57,7 +56,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::resource('buses', BusController::class)->except('show');
     Route::resource('routes', RouteController::class)->except('show');
     Route::resource('trips', TripController::class)->except('show');
-    Route::post('bookings/{booking}/approve', [BookingController::class, 'approve'])->name('bookings.approve');
     Route::resource('bookings', BookingController::class);
+    Route::post('bookings/{booking}/approve', [BookingController::class, 'approve'])->name('bookings.approve');
 });
 ?>

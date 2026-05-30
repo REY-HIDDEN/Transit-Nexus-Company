@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', __('ticket'))
+@section('title', __('messages.ticket'))
 @section('subtitle', $booking->ticket_number)
 
 @section('actions')

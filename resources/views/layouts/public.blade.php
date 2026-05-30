@@ -556,7 +556,7 @@
                     <form method="post" action="{{ route('logout') }}" class="d-inline">
                         @csrf
                         <button class="btn btn-outline-secondary btn-sm btn-icon">
-                            <i class="bi bi-box-arrow-right"></i><span>{{ __('messages        .logout') }}</span>
+                            <i class="bi bi-box-arrow-right"></i><span>{{ __('messages.logout') }}</span>
                         </button>
                     </form>
                 @else

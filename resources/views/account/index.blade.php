@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-@section('title', __('my_tickets') . ' | ' . __('title'))
+@section('title', __('messages.my_tickets') . ' | ' . __('messages.title'))
 
 @section('content')
     <section class="section-pad">

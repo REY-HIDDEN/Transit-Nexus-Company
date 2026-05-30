@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-@section('title', __('book_a_trip') . ' | ' . __('title'))
+@section('title', __('messages.book_a_trip') . ' | ' . __('messages.title'))
 
 @section('content')
     <section class="section-pad">
@@ -47,16 +47,16 @@
                         </div>
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label for="passenger_name" class="form-label">full_name</label>
+                                <label for="passenger_name" class="form-label">{{ __('messages.full_name') }}</label>
                                 <input type="text" id="passenger_name" name="passenger_name" class="form-control" value="{{ old('passenger_name', auth()->user()->name) }}" required>
                             </div>
                             <div class="col-md-6">
-                                <label for="phone_number" class="form-label">phone_number</label>
+                                <label for="phone_number" class="form-label">{{ __('messages.phone_number') }}</label>
                                 <input type="text" id="phone_number" name="phone_number" class="form-control" value="{{ old('phone_number') }}" required placeholder="+250 7XX XXX XXX">
                             </div>
                             <div class="col-md-6">
-                                <label for="seat_number" class="form-label">seat_number <span class="text-secondary fw-normal">(optional)</span></label>
-                                <input type="number" id="seat_number" name="seat_number" min="1" max="{{ $trip->bus?->capacity }}" class="form-control" value="{{ old('seat_number') }}" placeholder="auto_assign">
+                                <label for="seat_number" class="form-label">{{ __('messages.seat_number') }} <span class="text-secondary fw-normal">({{ __('messages.optional') }})</span></label>
+                                <input type="number" id="seat_number" name="seat_number" min="1" max="{{ $trip->bus?->capacity }}" class="form-control" value="{{ old('seat_number') }}" placeholder="{{ __('messages.auto_assign') }}">
                             </div>
                         </div>
                         <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">

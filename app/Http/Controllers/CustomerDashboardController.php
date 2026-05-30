@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
-use App\Models\Route;
+use App\Models\Route as TransportRoute;
 use App\Models\Trip;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
@@ -21,7 +22,7 @@ class CustomerDashboardController extends Controller
             ->latest('booking_id')
             ->paginate(8);
 
-        $routes = Route::withCount('trips')->latest('route_id')->get();
+        $routes = TransportRoute::withCount('trips')->latest('route_id')->get();
 
         $trips = Trip::with(['bus', 'route'])
             ->whereDate('departure_date', '>=', now()->toDateString())
@@ -57,7 +58,7 @@ class CustomerDashboardController extends Controller
         ]);
 
         if ($user->avatar) {
-            \Illuminate\Support\Facades\Storage::delete($user->avatar);
+            Storage::delete($user->avatar);
         }
 
         $path = $request->file('avatar')->store('avatars', 'public');

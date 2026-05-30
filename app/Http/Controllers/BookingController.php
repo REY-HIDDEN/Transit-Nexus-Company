@@ -94,7 +94,7 @@ class BookingController extends Controller
         $booking->update(['booking_status' => 'confirmed']);
 
         if ($booking->user_id && $booking->user?->email) {
-            Mail::to($booking->user->email)->send(new BookingApproved($booking));
+            Mail::to($booking->user->email)->queue(new BookingApproved($booking));
         }
 
         return redirect()->route('bookings.index')->with('success', "Booking {$booking->ticket_number} approved and user notified.");
@@ -109,7 +109,7 @@ class BookingController extends Controller
         $booking->update(['booking_status' => 'cancelled']);
 
         if ($booking->user_id && $booking->user?->email) {
-            Mail::to($booking->user->email)->send(new BookingDeclined($booking));
+            Mail::to($booking->user->email)->queue(new BookingDeclined($booking));
         }
 
         return redirect()->route('bookings.index')->with('success', "Booking {$booking->ticket_number} declined and user notified.");
@@ -147,9 +147,10 @@ class BookingController extends Controller
             ]);
         }
 
-        $reservedCount = $trip->reservedBookings()
-            ->when($ignoreBooking, fn ($query) => $query->whereKeyNot($ignoreBooking->booking_id))
-            ->count();
+        $reservedQuery = $trip->reservedBookings()
+            ->when($ignoreBooking, fn ($query) => $query->whereKeyNot($ignoreBooking->booking_id));
+
+        $reservedCount = (clone $reservedQuery)->count();
 
         if ($reservedCount >= $capacity && ($ignoreBooking?->booking_status !== 'confirmed')) {
             throw ValidationException::withMessages([
@@ -164,8 +165,7 @@ class BookingController extends Controller
                 ]);
             }
 
-            $seatTaken = $trip->reservedBookings()
-                ->when($ignoreBooking, fn ($query) => $query->whereKeyNot($ignoreBooking->booking_id))
+            $seatTaken = (clone $reservedQuery)
                 ->where('seat_number', $requestedSeat)
                 ->exists();
 
@@ -178,8 +178,7 @@ class BookingController extends Controller
             return $requestedSeat;
         }
 
-        $takenSeats = $trip->reservedBookings()
-            ->when($ignoreBooking, fn ($query) => $query->whereKeyNot($ignoreBooking->booking_id))
+        $takenSeats = (clone $reservedQuery)
             ->pluck('seat_number')
             ->map(fn ($seat) => (int) $seat)
             ->all();
