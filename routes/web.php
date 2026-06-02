@@ -55,6 +55,11 @@ Route::middleware('auth')->group(function () {
     // Payment routes
     Route::get('/bookings/{booking}/pay', [PaymentController::class, 'create'])->name('payment.create');
     Route::post('/bookings/{booking}/pay', [PaymentController::class, 'store'])->name('payment.store');
+
+    // Session idle timeout
+    Route::post('/session/ping', function () {
+        return response()->json(['status' => 'ok']);
+    })->name('session.ping');
 });
 
 // Admin routes

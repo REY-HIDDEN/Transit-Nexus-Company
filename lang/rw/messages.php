@@ -149,4 +149,11 @@ return [
     'no_payments_found' => 'Nta byishyu byabonetse muri iki gihe.',
     'showing_payments' => 'Birenga :count byishyu',
     'payment_receipt_subject' => 'Imyandikire y\'Ubwishyu – :ticket',
+
+    // Idle timeout translations
+    'idle_title' => 'Ukibaho?',
+    'idle_message' => "Nta gikorwa wakoreye igihe runaka. Sohoka cyangwa ukomereze kuba uri kuri sisitemu.",
+    'idle_stay' => 'Komereza Kuri Sisitemu',
+    'idle_logout' => 'Sohoka',
+    'idle_countdown' => 'Isohoka nyuma ya',
 ];

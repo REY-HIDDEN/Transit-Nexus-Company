@@ -148,4 +148,11 @@ return [
     'no_payments_found' => 'No payments found for this period.',
     'showing_payments' => 'Showing :count payment(s)',
     'payment_receipt_subject' => 'Payment Receipt – :ticket',
+
+    // Idle timeout translations
+    'idle_title' => 'Still there?',
+    'idle_message' => 'You have been inactive. Log out for security or stay logged in.',
+    'idle_stay' => 'Stay Logged In',
+    'idle_logout' => 'Logout',
+    'idle_countdown' => 'Logging out in',
 ];

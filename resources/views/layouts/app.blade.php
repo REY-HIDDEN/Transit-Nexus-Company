@@ -571,6 +571,32 @@
     </main>
 </div>
 
+{{-- Idle Session Timeout Modal --}}
+<div class="modal fade" id="idleTimeoutModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="idleTimeoutLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content" style="border: none; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
+            <div class="modal-body text-center p-4">
+                <div class="mb-3" style="font-size: 3rem; line-height: 1;">
+                    <span class="d-inline-flex align-items-center justify-content-center" style="width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, #fef3c7, #fde68a); color: #b45309;">
+                        <i class="bi bi-clock-history"></i>
+                    </span>
+                </div>
+                <h5 class="fw-bold mb-2" id="idleTimeoutLabel" style="letter-spacing: -0.02em;">{{ __('messages.idle_title') }}</h5>
+                <p class="text-secondary mb-3" style="font-size: 0.9rem;">{{ __('messages.idle_message') }}</p>
+                <div id="idleCountdown" class="mb-3" style="font-size: 1.75rem; font-weight: 800; color: #dc2626; letter-spacing: -0.02em; font-variant-numeric: tabular-nums;"></div>
+                <div class="d-flex gap-2 justify-content-center">
+                    <button type="button" class="btn btn-outline-secondary btn-icon" id="idleLogoutBtn">
+                        <i class="bi bi-box-arrow-right"></i><span>{{ __('messages.idle_logout') }}</span>
+                    </button>
+                    <button type="button" class="btn btn-primary btn-icon" id="idleStayBtn">
+                        <i class="bi bi-person-check"></i><span>{{ __('messages.idle_stay') }}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 (function() {
@@ -616,6 +642,107 @@
     document.querySelectorAll('.reveal, .reveal-stagger').forEach(function(el) {
         observer.observe(el);
     });
+})();
+
+/* ── Idle Session Timeout ──────────────────────────────────── */
+(function() {
+    const IDLE_TIMEOUT_MS = 50000;   // 50 seconds idle before warning
+    const GRACE_PERIOD_MS = 15000;   // 15 seconds grace to respond
+    const CSRF_TOKEN = '{{ csrf_token() }}';
+
+    var idleTimer = null;
+    var graceInterval = null;
+    var graceTimeout = null;
+    var isWarningShown = false;
+
+    var modalEl = document.getElementById('idleTimeoutModal');
+    if (!modalEl) return;
+
+    var modal = new bootstrap.Modal(modalEl);
+    var countdownEl = document.getElementById('idleCountdown');
+
+    function resetIdleTimer() {
+        if (isWarningShown) return;
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(showWarning, IDLE_TIMEOUT_MS);
+    }
+
+    function showWarning() {
+        // Don't interrupt if another modal is already open
+        if (document.querySelectorAll('.modal.show').length > 0) {
+            resetIdleTimer();
+            return;
+        }
+
+        isWarningShown = true;
+        var remaining = Math.ceil(GRACE_PERIOD_MS / 1000);
+        countdownEl.textContent = '{{ __('messages.idle_countdown') }}' + ' ' + remaining + 's';
+        modal.show();
+
+        graceInterval = setInterval(function() {
+            remaining--;
+            countdownEl.textContent = '{{ __('messages.idle_countdown') }}' + ' ' + remaining + 's';
+            if (remaining <= 0) {
+                clearInterval(graceInterval);
+                performLogout();
+            }
+        }, 1000);
+
+        graceTimeout = setTimeout(function() {
+            performLogout();
+        }, GRACE_PERIOD_MS);
+    }
+
+    function stayActive() {
+        clearInterval(graceInterval);
+        clearTimeout(graceTimeout);
+        isWarningShown = false;
+        modal.hide();
+
+        // Ping server to keep session alive
+        fetch('{{ route('session.ping') }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': CSRF_TOKEN,
+                'Accept': 'application/json'
+            }
+        }).catch(function() {});
+
+        resetIdleTimer();
+    }
+
+    function performLogout() {
+        clearInterval(graceInterval);
+        clearTimeout(graceTimeout);
+        modal.hide();
+
+        var form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ route('logout') }}';
+        form.style.display = 'none';
+
+        var csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token';
+        csrfInput.value = CSRF_TOKEN;
+        form.appendChild(csrfInput);
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    // Bind UI buttons
+    document.getElementById('idleStayBtn').addEventListener('click', stayActive);
+    document.getElementById('idleLogoutBtn').addEventListener('click', performLogout);
+
+    // Track user activity
+    var activityEvents = ['mousedown', 'mousemove', 'keydown', 'scroll', 'touchstart', 'click', 'wheel'];
+    for (var i = 0; i < activityEvents.length; i++) {
+        document.addEventListener(activityEvents[i], resetIdleTimer, { passive: true });
+    }
+
+    // Start the idle timer
+    resetIdleTimer();
 })();
 </script>
 </body>
