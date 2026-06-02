@@ -486,6 +486,9 @@
             <a class="nav-link {{ request()->routeIs('bookings.*') ? 'active' : '' }}" href="{{ route('bookings.index') }}">
                 <i class="bi bi-ticket-perforated"></i><span>{{ __('messages.bookings') }}</span>
             </a>
+            <a class="nav-link {{ request()->routeIs('reports.*') ? 'active' : '' }}" href="{{ route('reports.payments') }}">
+                <i class="bi bi-bar-chart"></i><span>reports</span>
+            </a>
         </nav>
 
         {{-- Language Switcher --}}

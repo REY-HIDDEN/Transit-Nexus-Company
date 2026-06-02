@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Booking extends Model
@@ -31,6 +32,11 @@ class Booking extends Model
         'seat_number' => 'integer',
     ];
 
+    public function getTotalAmountAttribute(): float
+    {
+        return (float) ($this->trip?->route?->ticket_price ?? 0);
+    }
+
     public function trip(): BelongsTo
     {
         return $this->belongsTo(Trip::class, 'trip_id', 'trip_id');
@@ -39,6 +45,16 @@ class Booking extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class, 'booking_id', 'booking_id');
+    }
+
+    public function latestPayment()
+    {
+        return $this->hasOne(Payment::class, 'booking_id', 'booking_id')->latestOfMany();
     }
 
     public function scopePaid(Builder $query): Builder

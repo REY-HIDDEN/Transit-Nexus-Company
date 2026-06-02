@@ -12,9 +12,20 @@
             </button>
         </form>
     @endif
-    <button type="button" class="btn btn-outline-secondary btn-icon no-print" onclick="window.print()">
-        <i class="bi bi-printer"></i><span>print</span>
-    </button>
+    @php $payment = $booking->latestPayment; @endphp
+    @if ($payment && ! $payment->verified_at && $booking->payment_status === 'paid')
+        <form method="post" action="{{ route('bookings.verify-payment', $booking) }}" class="d-inline no-print">
+            @csrf
+            <button class="btn btn-success btn-icon" style="background: #2563eb; border: none;">
+                <i class="bi bi-shield-check"></i><span>verify payment</span>
+            </button>
+        </form>
+    @endif
+    @if ($booking->payment_status === 'paid')
+        <button type="button" class="btn btn-outline-secondary btn-icon no-print" onclick="window.print()">
+            <i class="bi bi-printer"></i><span>print ticket</span>
+        </button>
+    @endif
     <a href="{{ route('bookings.index') }}" class="btn btn-primary btn-icon no-print">
         <i class="bi bi-arrow-left"></i><span>bookings</span>
     </a>
@@ -63,6 +74,23 @@
                     <div class="text-secondary small text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.05em;">payment</div>
                     @php $pc = $booking->payment_status === 'paid' ? ['#d1fae5', '#065f46'] : ($booking->payment_status === 'pending' ? ['#fef3c7', '#92400e'] : ['#fee2e2', '#991b1b']); @endphp
                     <span class="badge" style="background: {{ $pc[0] }}; color: {{ $pc[1] }}; border: none;">{{ ucfirst($booking->payment_status) }}</span>
+                    @if ($payment)
+                        <div class="mt-2 small">
+                            <div><span class="text-secondary">method:</span> {{ str_replace('_', ' ', ucfirst($payment->payment_method)) }}</div>
+                            <div><span class="text-secondary">amount:</span> <span class="fw-semibold">{{ number_format($payment->amount, 2) }}</span></div>
+                            @if ($payment->insurance)
+                                <div><span class="text-secondary">insurance:</span> <span class="fw-semibold">+{{ number_format($payment->insurance_fee, 2) }}</span></div>
+                            @endif
+                            @if ($payment->transaction_reference)
+                                <div><span class="text-secondary">ref:</span> <span class="fw-semibold" style="font-family: monospace;">{{ $payment->transaction_reference }}</span></div>
+                            @endif
+                            @if ($payment->verified_at)
+                                <div><span class="text-secondary">verified:</span>
+                                    <span class="badge" style="background: #d1fae5; color: #065f46; border: none; font-size: 0.7rem;">verified {{ $payment->verified_at->format('M d, Y H:i') }}</span>
+                                </div>
+                            @endif
+                        </div>
+                    @endif
                 </div>
                 <div class="col-md-6">
                     <div class="text-secondary small text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.05em;">booking date</div>

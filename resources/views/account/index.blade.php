@@ -61,6 +61,7 @@
                                 <th class="text-end">seat</th>
                                 <th>payment</th>
                                 <th>status</th>
+                                <th class="text-end">action</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -81,10 +82,21 @@
                                         @php $bs = $booking->booking_status; $bsBg = $bs === 'confirmed' ? '#d1fae5' : ($bs === 'pending' ? '#fef3c7' : '#fee2e2'); $bsFg = $bs === 'confirmed' ? '#065f46' : ($bs === 'pending' ? '#92400e' : '#991b1b'); @endphp
                                         <span class="badge" style="background: {{ $bsBg }}; color: {{ $bsFg }}; border: none;">{{ ucfirst($booking->booking_status) }}</span>
                                     </td>
+                                    <td class="text-end">
+                                        @if ($booking->payment_status === 'pending')
+                                            <a href="{{ route('payment.create', $booking) }}" class="btn btn-success btn-sm btn-icon" style="background: #059669; border: none;">
+                                                <i class="bi bi-credit-card"></i><span>pay now</span>
+                                            </a>
+                                        @elseif ($booking->payment_status === 'paid')
+                                            <span class="badge" style="background: #d1fae5; color: #065f46; border: none;">
+                                                <i class="bi bi-check-circle"></i> paid
+                                            </span>
+                                        @endif
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center py-5">
+                                    <td colspan="7" class="text-center py-5">
                                         <i class="bi bi-ticket text-secondary" style="font-size: 3rem; opacity: 0.3;"></i>
                                         <p class="text-secondary mt-2 mb-0">no tickets found</p>
                                         <a href="{{ route('home') }}#trips" class="btn btn-primary btn-icon mt-3">

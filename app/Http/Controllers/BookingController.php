@@ -57,7 +57,7 @@ class BookingController extends Controller
 
     public function show(Booking $booking)
     {
-        $booking->load(['trip.bus', 'trip.route']);
+        $booking->load(['trip.bus', 'trip.route', 'latestPayment.verifiedBy']);
 
         return view('bookings.show', compact('booking'));
     }

@@ -3,6 +3,8 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\BusController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\CustomerBookingController;
 use App\Http\Controllers\CustomerDashboardController;
 use App\Http\Controllers\DashboardController;
@@ -49,6 +51,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/account/password', [CustomerDashboardController::class, 'updatePassword'])->name('account.password.update');
     Route::get('/trips/{trip}/book', [CustomerBookingController::class, 'create'])->name('public.bookings.create');
     Route::post('/trips/{trip}/book', [CustomerBookingController::class, 'store'])->name('public.bookings.store');
+
+    // Payment routes
+    Route::get('/bookings/{booking}/pay', [PaymentController::class, 'create'])->name('payment.create');
+    Route::post('/bookings/{booking}/pay', [PaymentController::class, 'store'])->name('payment.store');
 });
 
 // Admin routes
@@ -60,5 +66,8 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::resource('trips', TripController::class)->except('show');
     Route::resource('bookings', BookingController::class);
     Route::post('bookings/{booking}/approve', [BookingController::class, 'approve'])->name('bookings.approve');
+    Route::post('bookings/{booking}/verify-payment', [PaymentController::class, 'verify'])->name('bookings.verify-payment');
+    Route::get('reports/payments', [ReportController::class, 'payments'])->name('reports.payments');
+    Route::get('reports/payments/export', [ReportController::class, 'exportExcel'])->name('reports.payments.export');
 });
 ?>

@@ -36,7 +36,7 @@ class CustomerBookingController extends Controller
 
         $booking = Booking::create($data);
 
-        return redirect()->route('account')->with('success', "Ticket {$booking->ticket_number} created – pending admin approval.");
+        return redirect()->route('payment.create', $booking)->with('success', "Ticket {$booking->ticket_number} created – please complete payment.");
     }
 
     private function resolveSeat(Trip $trip, ?int $requestedSeat): int
