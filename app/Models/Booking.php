@@ -54,7 +54,7 @@ class Booking extends Model
 
     public function latestPayment()
     {
-        return $this->hasOne(Payment::class, 'booking_id', 'booking_id')->latestOfMany();
+        return $this->hasOne(Payment::class, 'booking_id', 'booking_id')->latestOfMany('payment_id');
     }
 
     public function scopePaid(Builder $query): Builder
