@@ -5,7 +5,7 @@ services:
     phpVersion: "8.2"
     plan: free
     buildCommand: |
-      composer install --no-dev --no-interaction --prefer-dist &&
+      composer install --no-interaction --prefer-dist &&
       npm install &&
       npm run build &&
       php artisan key:generate &&
