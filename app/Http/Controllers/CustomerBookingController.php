@@ -27,7 +27,7 @@ class CustomerBookingController extends Controller
         ]);
 
         $data['seat_number'] = $this->resolveSeat($trip, $data['seat_number'] ?? null);
-        $data['user_id'] = $request->user()->id;
+        $data['user_id'] = $request->user()?->id; // null for guests, set for logged-in users
         $data['trip_id'] = $trip->trip_id;
         $data['booking_date'] = now()->toDateString();
         $data['payment_status'] = 'pending';

@@ -15,14 +15,9 @@ class PaymentController extends Controller
 
     public function create(Booking $booking)
     {
-        // Ensure the booking belongs to the authenticated user
-        if ($booking->user_id !== request()->user()->id) {
-            abort(403);
-        }
-
         // Ensure the booking is still pending payment
         if ($booking->payment_status === 'paid') {
-            return redirect()->route('account')->with('info', 'This ticket has already been paid.');
+            return redirect()->route('tickets.receipt', $booking)->with('info', 'This ticket has already been paid.');
         }
 
         $booking->load(['trip.bus', 'trip.route']);
@@ -34,12 +29,8 @@ class PaymentController extends Controller
 
     public function store(Request $request, Booking $booking)
     {
-        if ($booking->user_id !== $request->user()->id) {
-            abort(403);
-        }
-
         if ($booking->payment_status === 'paid') {
-            return redirect()->route('account')->with('info', 'This ticket has already been paid.');
+            return redirect()->route('tickets.receipt', $booking)->with('info', 'This ticket has already been paid.');
         }
 
         $booking->load(['trip.route']);
@@ -75,12 +66,12 @@ class PaymentController extends Controller
 
         $booking->update(['payment_status' => 'paid']);
 
-        // Send payment receipt email
+        // Send payment receipt email if user has email
         if ($booking->user?->email) {
             Mail::to($booking->user->email)->queue(new PaymentReceipt($payment));
         }
 
-        return redirect()->route('account')->with('success', 'Payment completed successfully! A receipt has been sent to your email.');
+        return redirect()->route('tickets.receipt', $booking)->with('success', 'Payment completed successfully! Your ticket is now confirmed.');
     }
 
     public function verify(Booking $booking)

@@ -48,7 +48,7 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="passenger_name" class="form-label">{{ __('messages.full_name') }}</label>
-                                <input type="text" id="passenger_name" name="passenger_name" class="form-control" value="{{ old('passenger_name', auth()->user()->name) }}" required>
+                                <input type="text" id="passenger_name" name="passenger_name" class="form-control" value="{{ old('passenger_name') }}" required placeholder="e.g. Jean Baptiste">
                             </div>
                             <div class="col-md-6">
                                 <label for="phone_number" class="form-label">{{ __('messages.phone_number') }}</label>

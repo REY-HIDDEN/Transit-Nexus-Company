@@ -1106,6 +1106,7 @@
         <div class="collapse navbar-collapse" id="publicNav">
             <div class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
                 <a class="nav-link px-3" href="{{ route('home') }}#trips">{{ __('messages.trips') }}</a>
+                <a class="nav-link px-3" href="{{ route('tickets.lookup') }}">Find My Ticket</a>
 
                 @auth
                     <a class="nav-link px-3" href="{{ route('account') }}">{{ __('messages.my_tickets') }}</a>

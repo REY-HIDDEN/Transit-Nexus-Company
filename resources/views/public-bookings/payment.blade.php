@@ -133,8 +133,8 @@
                         </div>
 
                         <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
-                            <a href="{{ route('account') }}" class="btn btn-outline-secondary btn-icon">
-                                <i class="bi bi-arrow-left"></i><span>back to tickets</span>
+                            <a href="{{ route('tickets.lookup') }}" class="btn btn-outline-secondary btn-icon">
+                                <i class="bi bi-arrow-left"></i><span>back</span>
                             </a>
                             <button type="submit" class="btn btn-primary btn-icon" style="background: linear-gradient(135deg, #059669, #047857); border: none; box-shadow: 0 2px 8px rgba(5, 150, 105, 0.25);">
                                 <i class="bi bi-check2-circle"></i><span>confirm payment</span>

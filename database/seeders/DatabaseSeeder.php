@@ -64,20 +64,19 @@ class DatabaseSeeder extends Seeder
             ['bus_index' => 0, 'route_index' => 3, 'day_offset' => 1, 'time' => '12:00', 'arrival' => '15:00'],
         ];
 
+        // Remove old trips and re-seed with fresh dates from today
+        Trip::query()->delete();
+
         $seededTrips = [];
         foreach ($tripsData as $data) {
-            $seededTrips[] = Trip::query()->firstOrCreate(
-                [
-                    'bus_id' => $buses[$data['bus_index']]->bus_id,
-                    'route_id' => $routes[$data['route_index']]->route_id,
-                    'departure_date' => now()->addDays($data['day_offset'])->toDateString(),
-                    'departure_time' => $data['time'],
-                ],
-                [
-                    'arrival_time' => $data['arrival'],
-                    'status' => 'scheduled',
-                ]
-            );
+            $seededTrips[] = Trip::create([
+                'bus_id' => $buses[$data['bus_index']]->bus_id,
+                'route_id' => $routes[$data['route_index']]->route_id,
+                'departure_date' => now()->addDays($data['day_offset'])->toDateString(),
+                'departure_time' => $data['time'],
+                'arrival_time' => $data['arrival'],
+                'status' => 'scheduled',
+            ]);
         }
 
         $trip = $seededTrips[0];

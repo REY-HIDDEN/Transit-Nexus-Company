@@ -14,7 +14,6 @@ class HomeController extends Controller
         $trips = Trip::query()
             ->with(['bus', 'route'])
             ->whereIn('status', ['scheduled', 'boarding'])
-            ->whereDate('departure_date', '>=', now()->toDateString())
             ->when($search, function ($query) use ($search) {
                 $query->whereHas('route', function ($route) use ($search) {
                     $route->where('origin', 'like', "%{$search}%")
@@ -23,7 +22,6 @@ class HomeController extends Controller
             })
             ->orderBy('departure_date')
             ->orderBy('departure_time')
-            ->take(8)
             ->get();
 
         return view('home', compact('trips', 'search'));

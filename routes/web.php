@@ -43,18 +43,25 @@ Route::middleware('guest')->group(function () {
 // Logout
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
+// Public booking routes (no auth required — guests can book and pay)
+Route::get('/trips/{trip}/book', [CustomerBookingController::class, 'create'])->name('public.bookings.create');
+Route::post('/trips/{trip}/book', [CustomerBookingController::class, 'store'])->name('public.bookings.store');
+
+// Public payment routes (no auth required)
+Route::get('/bookings/{booking}/pay', [PaymentController::class, 'create'])->name('payment.create');
+Route::post('/bookings/{booking}/pay', [PaymentController::class, 'store'])->name('payment.store');
+
+// Ticket lookup & receipt (no auth required — phone number based)
+Route::get('/tickets/lookup', [App\Http\Controllers\TicketController::class, 'lookupForm'])->name('tickets.lookup');
+Route::post('/tickets/lookup', [App\Http\Controllers\TicketController::class, 'lookup'])->name('tickets.lookup.post');
+Route::get('/tickets/{booking}/receipt', [App\Http\Controllers\TicketController::class, 'receipt'])->name('tickets.receipt');
+
 // Authenticated user routes
 Route::middleware('auth')->group(function () {
     Route::get('/account', [CustomerDashboardController::class, 'index'])->name('account');
     Route::post('/account/profile', [CustomerDashboardController::class, 'updateProfile'])->name('account.profile.update');
     Route::post('/account/avatar', [CustomerDashboardController::class, 'updateAvatar'])->name('account.avatar.update');
     Route::post('/account/password', [CustomerDashboardController::class, 'updatePassword'])->name('account.password.update');
-    Route::get('/trips/{trip}/book', [CustomerBookingController::class, 'create'])->name('public.bookings.create');
-    Route::post('/trips/{trip}/book', [CustomerBookingController::class, 'store'])->name('public.bookings.store');
-
-    // Payment routes
-    Route::get('/bookings/{booking}/pay', [PaymentController::class, 'create'])->name('payment.create');
-    Route::post('/bookings/{booking}/pay', [PaymentController::class, 'store'])->name('payment.store');
 
     // Session idle timeout
     Route::post('/session/ping', function () {
