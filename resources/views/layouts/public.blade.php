@@ -1085,6 +1085,7 @@
             .portal-card { padding: 2rem 1.5rem; }
         }
     </style>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
 <div class="bg-slideshow" id="bgSlideshow">
