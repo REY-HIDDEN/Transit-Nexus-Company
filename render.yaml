@@ -4,14 +4,8 @@ services:
     runtime: php
     phpVersion: "8.2"
     plan: free
-    buildCommand: |
-      composer install --no-interaction --prefer-dist &&
-      npm install &&
-      npm run build &&
-      php artisan config:cache
-    startCommand: |
-      php artisan migrate --force &&
-      php artisan serve --host=0.0.0.0 --port=$PORT
+    buildCommand: composer install --no-interaction --prefer-dist --no-dev && npm install && npm run build && php artisan config:cache
+    startCommand: php artisan migrate --force && exec php -S 0.0.0.0:$PORT -t public
     envVars:
       - key: APP_NAME
         value: "Transit Nexus"
@@ -23,17 +17,33 @@ services:
         value: base64:xz9AumCkl8pRaon+GcgftYKMlqPsGV0EwrKHWAoqxHQ=
       - key: APP_URL
         value: https://transit-nexus.onrender.com
+      - key: APP_LOCALE
+        value: en
+      - key: APP_FALLBACK_LOCALE
+        value: en
+      - key: LOG_CHANNEL
+        value: stack
+      - key: LOG_LEVEL
+        value: error
       - key: DB_CONNECTION
         value: sqlite
       - key: DB_DATABASE
         value: database/database.sqlite
       - key: SESSION_DRIVER
         value: file
+      - key: SESSION_LIFETIME
+        value: 120
       - key: CACHE_STORE
         value: file
       - key: QUEUE_CONNECTION
         value: sync
+      - key: BROADCAST_CONNECTION
+        value: log
+      - key: FILESYSTEM_DISK
+        value: local
       - key: MAIL_MAILER
+        value: smtp
+      - key: MAIL_SCHEME
         value: smtp
       - key: MAIL_HOST
         value: smtp.gmail.com
@@ -47,3 +57,5 @@ services:
         value: lizikijeanpaul@gmail.com
       - key: MAIL_FROM_NAME
         value: "Transit Nexus Company"
+      - key: BCRYPT_ROUNDS
+        value: 12
