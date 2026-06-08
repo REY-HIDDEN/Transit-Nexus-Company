@@ -4,8 +4,12 @@ services:
     runtime: php
     phpVersion: "8.2"
     plan: free
-    buildCommand: composer install --no-interaction --prefer-dist --no-dev && npm install && npm run build && php artisan config:cache
-    startCommand: php artisan migrate --force && exec php -S 0.0.0.0:$PORT -t public
+    buildCommand: >
+      composer install --no-interaction --prefer-dist --no-dev &&
+      touch database/database.sqlite &&
+      php artisan config:cache &&
+      php artisan migrate --force
+    startCommand: php -S 0.0.0.0:$PORT -t public
     envVars:
       - key: APP_NAME
         value: "Transit Nexus"
@@ -28,7 +32,7 @@ services:
       - key: DB_CONNECTION
         value: sqlite
       - key: DB_DATABASE
-        value: database/database.sqlite
+        value: /var/data/database.sqlite
       - key: SESSION_DRIVER
         value: file
       - key: SESSION_LIFETIME
@@ -59,3 +63,7 @@ services:
         value: "Transit Nexus Company"
       - key: BCRYPT_ROUNDS
         value: 12
+    disk:
+      name: sqlite-data
+      mountPath: /var/data
+      sizeGB: 1
