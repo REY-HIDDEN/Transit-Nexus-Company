@@ -1,0 +1,32 @@
+title: Transit Nexus Company
+description: System that Manages Passenger bookings, Buses and routes, Ticket sales
+theme: jekyll-theme-primer
+
+# Build settings
+markdown: kramdown
+plugins:
+  - jekyll-github-metadata
+  - jekyll-seo-tag
+  - jekyll-default-layouts
+
+# Exclude files from the build
+exclude:
+  - vendor
+  - Gemfile
+  - Gemfile.lock
+  - app
+  - bootstrap
+  - config
+  - database
+  - lang
+  - public
+  - resources
+  - routes
+  - storage
+  - tests
+  - composer.json
+  - composer.lock
+  - package.json
+  - package-lock.json
+  - phpunit.xml
+  - vite.config.js
